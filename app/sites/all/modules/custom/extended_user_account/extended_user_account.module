@@ -1,0 +1,455 @@
+<?php 
+
+	function extended_user_account_menu() {
+	
+		$items['account'] = array(
+			'title callback' => 'extended_user_account_title_callback',
+			'type' => MENU_NORMAL_ITEM,
+			'page callback' => 'drupal_get_form',
+			'page arguments' => array('extended_user_account_form'),
+			'access arguments' => array('access content'),
+			'file' => 'includes/extended_user_account_page.inc',			
+		);
+
+		$items['account/delete'] = array(
+			'title' => t('Delete Account'),
+			'type' => MENU_NORMAL_ITEM,
+			'page callback' => 'drupal_get_form',
+			'page arguments' => array('extended_user_account_delete_form'),
+			'access arguments' => array('access content'),
+			'file' => 'includes/extended_user_account_page.inc',			
+		);
+		
+		$items['admin/config/people/accounts/terms'] = array(
+			'title' => 'Extended User Account',
+			'description' => 'Additional account settings',
+			'page callback' => 'drupal_get_form',
+			'page arguments' => array('extended_user_account_terms'),
+			'access arguments' => array('administer extended user account settings'),
+			'type' => MENU_LOCAL_TASK,
+			'file' => 'includes/extended_user_account_admin.inc',
+		);
+
+		return $items;
+		
+	}
+	
+	
+	/**
+	 * Title Callback for the account page
+	 */
+	function extended_user_account_title_callback() {
+		module_load_include('inc', 'siteminder', 'includes/Siteminder.inc');	
+		$accountVerified = Siteminder::verifyUserAccount();
+		return $accountVerified ? t('Manage Account') : t('Complete User Registration');	
+	}
+
+
+	/**
+	 * Add debug headers if in debug mode
+	 */
+	function extended_user_account_init(){
+		if ( variable_get('siteminder_debug_mode') ) {
+			$_SERVER['HTTP_SM_USER'] = 'IDIR\testuser';
+			$_SERVER['HTTP_SM_AUTHDIRNAME'] = 'IDIR';
+			$_SERVER['HTTP_SMGOV_USEREMAIL'] = 'test.user@mail.com';
+			$_SERVER['HTTP_SMGOV_USERGUID'] = 'sdfdswedfdf98ddd7sdf987';
+		}
+	}
+
+	
+	/**
+	 * Implements hook_block_info().
+	 * Create a block that will hold the Manage Email Subscriptions
+	 * This will be used for the modal window, when ever needed.
+	*/
+	function extended_user_account_block_info() {
+		
+		$blocks = array();
+		
+		$blocks['manage_email_subscriptions'] = array(
+			'info' => t('Manage Email Subscriptions'),
+		);
+		
+		$vocab = taxonomy_vocabulary_machine_name_load('newsletter');
+	    $terms = taxonomy_get_tree($vocab->vid, 0, NULL, TRUE);
+	    
+	    foreach ($terms as $key => $term){					
+			$blocks['newsletter_block_term_id_' . $term->tid] = array(
+				'info' => t($term->name . ' Newsletter Block'),
+			);    
+	    }
+		
+		return $blocks;
+	}
+	
+	
+	/**
+	* Implements hook_block_view().
+	*/
+	function extended_user_account_block_view($delta = '') {
+		
+		$vocab = taxonomy_vocabulary_machine_name_load('newsletter');
+	    $terms = taxonomy_get_tree($vocab->vid, 0, NULL, TRUE);
+		
+		$block = array();
+		
+		switch ($delta) {				
+			case 'manage_email_subscriptions':
+				$block['subject'] = '';
+				$block['content'] = array(
+					'#markup' =>extended_user_account_manage_email_subscriptions(),
+					'#attached' => array(
+						'js' => array(drupal_get_path('module', 'extended_user_account') . '/js/extended_user_account.js'),
+					),
+				);
+			break;
+		}
+
+		foreach ($terms as $key => $term){
+			if ( $delta == 'newsletter_block_term_id_' . $term->tid ) {
+				$block['subject'] = $term->name . ' Newsletter';
+				$block['content'] = array(
+					'#markup' => extended_user_account_newsletter($term),
+					'#attached' => array(
+						'js' => array(drupal_get_path('module', 'extended_user_account') . '/js/extended_user_account.js'),
+					),
+				);
+			}
+		}
+	  
+	  return $block;
+	}
+	
+	
+	function extended_user_account_newsletter($term){
+	
+		// Show different block content for authenticated/annonymous users
+		// As well, if the user is athenticated and currently is signed up to 
+		// a particular newsletter, show differnt block contnet.
+		$authenticated_message 		= variable_get('newsletter_block_message_' . $term->tid, '');
+		$anonymous_message 	   		= variable_get('newsletter_block_message_annon_' . $term->tid, '');
+		$already_signed_up_message  = variable_get('newsletter_block_message_already_signed_up');		
+	
+		// Is user logged in
+		if ( user_is_logged_in() ) {
+		
+			global $user;
+		
+			module_load_include('module', 'simplenews');
+			$subscriber = simplenews_subscriber_load_by_mail($user->mail);	
+			
+			// If user is already subscribed to this newsletter
+			if ( $subscriber->tids && in_array($term->tid, $subscriber->tids) ) {
+				$output = $already_signed_up_message['value'];
+			} else {					
+				$output = $authenticated_message['value'];
+			}
+			
+		} else {
+			$output = $anonymous_message['value'];
+		}
+		
+		return $output;
+	}
+
+
+	// Assist with emails being send
+	function extended_user_account_mail_alter(&$message) {
+		unset($message['headers']['Sender']);
+		unset($message['headers']['Errors-To']);
+		unset($message['headers']['Return-Path']);
+		$message['headers']['Reply-To'] = $message['from'];
+	}
+	
+	
+	// Manage Account Block for Modal Window
+	function extended_user_account_manage_email_subscriptions() {
+		$output = drupal_get_form('extended_user_account_manage_email_subscriptions_form');
+		$output = drupal_render($output);
+		return $output;
+	}
+	
+	
+	// Manage Account Form for Block
+	function extended_user_account_manage_email_subscriptions_form($form, &$form_state){
+				
+		global $user;
+		$account = user_load($user->uid);
+	
+		// Simplenews Integration
+		module_load_include('module', 'simplenews');
+		module_load_include('inc', 'simplenews', 'includes/simplenews.subscription');
+		$subscriber = simplenews_subscriber_load_by_mail($account->mail);
+		
+		$form = array();
+	
+		$form['email_preferences']['label'] = array(
+			'#markup' => '<h2>Manage Your Email Subscriptions:</h2>',
+		);
+		
+		$form['email_preferences']['description'] = array(
+			'#markup' => '<p>Descriptions here...</p>',
+		);
+
+		if ( $account->field_subscribe ) {
+			$field_subscribe = $account->field_subscribe['und'][0]['value'];
+		} else {
+			$field_subscribe = false;
+		}
+		
+		$form['email_preferences']['field_subscribe'] = array(
+			'#type' => 'checkbox',
+			'#title' => '<span class="newsletter-label subscribe">Email Subscription</span>: Yes, Please Sign Me Up. We would like to receive more information on health.',
+			'#default_value' => $field_subscribe,
+		);
+	
+	    $options = array();
+		$default_value = array();
+
+		// Get newsletters for subscription form checkboxes.
+		// Newsletters with opt-in/out method 'hidden' will not be listed.
+		foreach (simplenews_category_get_visible() as $newsletter) {
+			$name = check_plain(_simplenews_newsletter_name($newsletter));
+			$description = $newsletter->description;
+			$class = strtolower(drupal_clean_css_identifier($newsletter->name));
+			$options[$newsletter->tid] = '<span class="newsletter-label ' . $class . '">' . $name . '</span>: ' . $description;
+			$default_value[$newsletter->tid] = FALSE;
+		}
+
+		if ( $subscriber ) {
+			$default_value = array_merge($default_value, $subscriber->tids);
+		}
+	
+		$form['email_preferences']['newsletters'] = array(
+			'#type' => 'checkboxes',
+			'#options' => $options,
+			'#default_value' => $default_value,
+		);
+		
+		// Buttons
+		$form['buttons'] = array(
+			'#type' => 'item',
+			'#prefix' => '<div id="buttons">',
+			'#suffix' => '</div>',
+		);
+		
+		$form['buttons']['submit'] = array(
+			'#type' => 'submit', 
+			'#value' => t('Update'), 
+		);
+		
+		// Call the form submit for the newsletter updates.
+		$form['#submit'][] = 'extended_user_account_newsletters_form_submit';	
+		
+		return $form;
+	
+	}
+	
+	/**
+	 * Submit and validation handlers
+	 */
+	
+	// Validate Handler for account details
+	function extended_user_account_details_form_validate($form, &$form_state){
+	
+		global $user;
+		
+		module_load_include('module', 'user');
+				
+		// Email
+		// Validate the e-mail address, and check if it is taken by an existing user.
+		$mail = trim($form_state['values']['mail']);
+		
+		if ($error = user_validate_mail($mail)) {
+			form_set_error('mail', $error);
+		} elseif ((bool) db_select('users')->fields('users', array('uid'))->condition('uid', $user->uid, '<>')->condition('mail', db_like($mail), 'LIKE')->range(0, 1)->execute()->fetchField()) {		
+			form_set_error('mail', t('The e-mail address %email is already taken.', array('%email' => $mail)));
+		}
+	}
+
+	
+	// Submit Handler for account detail updates
+	function extended_user_account_details_form_submit($form, &$form_state){
+		
+		// Get the user and account objects
+		global $user;
+		$account = user_load($user->uid);
+		
+		// Include the user module for the user_save method
+		module_load_include('module', 'user');
+		
+		// Add the updates to the edits array
+		$name = $form_state['values']['name'];
+		$mail = $form_state['values']['mail'];
+		$organizations = $form_state['values']['organization'];
+				
+		// Build the array for the custom field 'City' and insert the updated value
+		$city = array();
+		$city['und'] = array();
+		$city['und'][0]['value'] = $form_state['values']['city'];
+
+		$residence = array();
+		$residence['und'] = array();
+		$residence['und'][0]['value'] = $form_state['values']['residence'];
+		
+		// Build a new array to hold updated organization data
+		$organization_data = array();
+		$organization_data['und'] = array();
+		
+		foreach ($organizations as $key => $value) {
+			if ($value > 0) {
+				$organization_data['und'][$key] = array();
+				$organization_data['und'][$key]['tid'] = $key;
+			}
+		}
+		
+		// Build the array for the custom field 'Other Organization' and insert the updated value
+		$other_organization = array();
+		$other_organization['und'] = array();
+		$other_organization['und'][0]['value'] = $form_state['values']['other'];
+		
+		$accept_terms = array();
+		$accept_terms['und'] = array();
+		$accept_terms['und'][0]['value'] = (string) $form_state['values']['accept_terms'];
+
+		// Update newsletter preferences
+		extended_user_account_newsletters_form_submit($form, $form_state);	
+		
+		$edits = array();
+		$edits['name'] = $name;
+		$edits['field_profile_city'] = $city;
+		$edits['field_profile_residence'] = $residence;
+		$edits['mail'] = $mail;
+		$edits['field_organization'] = $organization_data;
+		$edits['field_profile_other_org'] = $other_organization;
+		$edits['field_accept_terms'] = $accept_terms;
+		$edits['access'] =  time();
+			
+		user_save($account, $edits, 'account');
+	
+		drupal_set_message('Your account details have been updated.');
+
+		drupal_goto('<front>');
+
+	}	
+	
+	// Submit Handler for newsletter updates
+	function extended_user_account_newsletters_form_submit($form, &$form_state){
+		
+		// Get the user and account objects
+		global $user;
+		$account = user_load($user->uid);	
+		$mail = $account->mail;
+		
+		// This is the general newsletter preference.  This does not show on the form.
+		// We will use the value from the $form_state['values']['field_subscribe'] to
+		// to set this.
+		
+		// Include the user module for the user_save method
+		module_load_include('module', 'user');
+		
+		// Add the updates to the edits array
+		$edits = array();
+
+		foreach ( $form_state['values']['newsletters'] as $tid => $checked ) {
+			if ( $checked ) {
+				simplenews_subscribe_user($mail, $tid, FALSE, 'website');
+			}
+			else {
+				simplenews_unsubscribe_user($mail, $tid, FALSE, 'website');
+			}
+		}
+		
+		// Save the user account
+		user_save($account, $edits, 'account');
+		
+	}
+	
+	function extended_user_account_form_alter(&$form, &$form_state, $form_id) {
+
+		// Global User Object of logged in user
+		global $user;
+		$account = user_load($user->uid);
+
+		if ($form_id == 'user_profile_form') {
+		
+			$form['account']['pass']['#type'] = 'hidden';
+			$form['account']['current_pass']['#type'] = 'hidden';
+			$form['account']['current_pass_required_values']['#type'] = 'hidden';
+			unset($form['#validate'][1]);
+						
+			// Simplenews Integration
+			module_load_include('module', 'simplenews');
+			module_load_include('inc', 'simplenews', 'includes/simplenews.subscription');
+			$subscriber = simplenews_subscriber_load_by_mail($account->mail);
+		
+			$options = array();
+			$default_value = array();
+
+			// Get newsletters for subscription form checkboxes.
+			// Newsletters with opt-in/out method 'hidden' will not be listed.
+			foreach (simplenews_category_get_visible() as $newsletter) {
+				$name = check_plain(_simplenews_newsletter_name($newsletter));
+				$description = $newsletter->description;
+				$class = strtolower(drupal_clean_css_identifier($newsletter->name));
+				$options[$newsletter->tid] = '<span class="newsletter-label ' . $class . '">' . $name . '</span>: ' . $description;
+				$default_value[$newsletter->tid] = FALSE;
+			}
+
+			if ( $subscriber ) {
+				$default_value = array_merge($default_value, $subscriber->tids);
+			}
+		
+			$form['newsletters'] = array(
+				'#type' => 'checkboxes',
+				'#title' => 'Email Subscription: Yes, Please Sign Me Up. I would like to receive more information on hunting regulations.',
+				'#options' => $options,
+				'#default_value' => $default_value,
+				'#weight' => 7,
+			);
+			
+			// Call the form submit for the newsletter updates.
+			$form['#submit'][] = 'extended_user_account_newsletters_form_submit';	
+			
+		} elseif ( isset( $form['#node_edit_form'] ) )  {
+
+			if( !empty( $form['actions'] ) ) {
+				
+				$form['extra_buttons'] = array(
+					'#prefix' => '<div class="extra-buttons" style="float:right;">',					
+					'#suffix' => '</div>', 	
+					'#weight' => -1001,			
+				);
+
+				foreach($form['actions'] as $name => $button) {		
+										
+					// SUBMIT BUTTON
+					if( $name == 'submit' ) {
+						$form['extra_buttons']["$name-copy"] = $button;
+						$form['extra_buttons']["$name-copy"]['#weight'] = -1001;
+					}
+					
+					// DELETE BUTTON
+					if($name == 'delete') {
+						$form['extra_buttons']["$name-copy"] = $button;
+						$form['extra_buttons']["$name-copy"]['#weight'] = -998;
+					}            
+			
+				} 
+
+			}
+
+		}
+
+
+	}
+	
+function extended_user_account_permission() {
+	return array(
+		'administer extended user account settings' => array(
+			'title' => t('Administer the extended user account global settings'),
+			'description' => t('Perform administration tasks for the extended user account Terms of Use.'),
+		),
+	);
+}

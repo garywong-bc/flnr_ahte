@@ -1,0 +1,118 @@
+
+#footer_theme_links_container {
+    background-color: #394559;
+    float: left;
+    font-family: verdana,arial,sans-serif;
+    font-size: 11px;
+    height: 452px;
+    line-height: 13px;
+    width: 960px;
+}
+#footer_container {
+    background-color: #394559;
+    float: left;
+    font-family: verdana,arial,sans-serif;
+    font-size: 11px;
+    height: 120px;
+    line-height: 13px;
+    width: 960px;
+}
+#footer {
+    background-color: #394559;
+}
+.footer_theme_links h3 {
+    margin-bottom: 10px;
+    margin-top: 0;
+}
+.footer_theme_links h3 a, .footer_theme_links h3 {
+    color: #909FB6;
+    font-family: Century Gothic,verdana,sans-serif;
+    font-size: 15px;
+    font-weight: normal;
+    padding-bottom: 5px;
+    text-decoration: none;
+}
+.footer_theme_links h3 a:hover {
+    text-decoration: underline;
+}
+.footer_theme_links {
+    background-color: #394559;
+    float: left;
+    height: 200px;
+    line-height: 1;
+    padding: 13px 20px;
+    width: 200px;
+}
+.footer_theme_links ul {
+    font-family: verdana,arial,sans-serif;
+    margin: 0;
+    padding: 0;
+}
+.footer_theme_links li {
+    line-height: 110%;
+    list-style-type: none;
+    padding: 6px 0 0;
+	list-style:none !important;
+	margin:0 !important;
+}
+.footer_theme_links li a {
+    color: #FFFFFF;
+    text-decoration: none;
+}
+.footer_theme_links li a:hover {
+    text-decoration: underline;
+}
+#media_links {
+    background-color: #FFFFFF;
+    border-radius: 7px;
+    height: 30px;
+    padding: 20px 0;
+    position: relative;
+}
+#media_links img {
+    float: left;
+    margin-top: -10px;
+}
+#media_links ul {
+    float: left;
+    list-style-type: none;
+    margin: 8px 0 0 20px;
+    padding: 0;
+}
+#media_links li {
+    border-left: 1px solid #394559;
+    display: inline;
+    margin: 0;
+    padding: 0 15px;
+	font-size:11px !important;
+}
+#media_links li:first-child {
+    border: medium none;
+}
+#media_links li a {
+    color: #394559 !important;
+    text-decoration: none;
+}
+#media_links li a:hover {
+    text-decoration: underline;
+}
+#admin_links {
+    float: right;
+    position: relative;
+}
+#admin_links ul {
+    list-style-type: none;
+    padding: 5px 0;
+}
+#admin_links li {
+    display: inline;
+    padding: 0 5px;
+}
+#admin_links li a {
+    color: #FFFFFF;
+    font-size: 10px !important;
+    text-decoration: none;
+}
+#admin_links li a:hover {
+    text-decoration: underline;
+}

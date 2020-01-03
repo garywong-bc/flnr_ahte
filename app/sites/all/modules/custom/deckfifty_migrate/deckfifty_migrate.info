@@ -1,0 +1,9 @@
+name = Deck Fifty Migrate
+description = "Migrate D6 to D7"
+package = Deck Fifty Design
+core = 7.x
+
+files[] = node.inc
+
+dependencies[] = migrate
+dependencies[] = migrate_d2d

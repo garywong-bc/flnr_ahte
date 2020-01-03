@@ -1,0 +1,136 @@
+<?php
+
+/**
+ * @file
+ * Hooks & common functionality
+ *
+ */
+
+
+/**
+ * Implements hook_views_api().
+ */
+/*function deckfifty_views_api() {
+  return array('api' => 3.0);
+}*/
+
+/**
+ * Implements hook_menu().
+ */
+/*function deckfifty_menu() {
+  $items['example'] = array(
+    'title' => 'Example',
+    'page callback' => 'deckfifty_example',
+    'access arguments' => array('access content'),
+    'type' => MENU_CALLBACK,
+  );
+
+  return $items;
+}*/
+
+/**
+ * Implements hook_block_info().
+ */
+function deckfifty_block_info() {
+  $blocks['newsletter_signup'] = array(
+    'info' => t('Newsletter subscribe'),
+  );
+  $blocks['newsletter_signup_2'] = array(
+    'info' => t('Newsletter subscribe (2)'),
+  );
+
+  return $blocks;
+}
+
+/**
+ * Implements hook_block_view().
+ */
+function deckfifty_block_view($delta = '') {
+
+  $block = array();
+
+  switch ($delta) {
+    case 'newsletter_signup':
+    case 'newsletter_signup_2':
+      $block['subject'] = t('Subscribe to alerts');
+      $block['content'] = deckfifty_newsletter_signup();
+      break;
+  }
+
+  return $block;
+}
+
+
+/**
+ * Newsletter subscription form
+ */
+function deckfifty_newsletter_signup() {
+  global $base_url;
+  $output = '<form action="http://www.bettermail.ca/bm/form.php" method="post"><input name="successurl" type="hidden" value="'.$base_url.'/node/931" /><input name="successurl" type="hidden" value="" /><input name="cid" type="hidden" value="2960" /> <input name="source" type="hidden" value="222938" /> <input name="bm_form_id" title="Homepage signup" type="hidden" value="6532" />
+    <div class="form-item">
+      <input name="interest[]" type="checkbox" value="51966" /> Notify me of new reports
+    </div>
+    <div class="form-item">
+      <input name="interest[]" type="checkbox" value="51968" /> Notify me of new job postings
+    </div>
+    <div class="form-item">
+      <input id="consent" name="consent" type="checkbox" value="1" /> I agree to receive email from the Auditor General of BC. I may unsubscribe at any time.
+    </div>
+    <div class="form-item">
+      <input name="email" type="text" value="" class="form-text" placeholder="Email address" />
+      <input type="submit" value="Subscribe" class="form-submit" />
+    </div>
+</form>
+';
+  return $output;
+  
+}
+
+/**
+ * Implements hook_form_alter().
+ */
+function deckfifty_form_alter(&$form, &$form_state, $form_id) {
+  
+  switch ($form_id) {
+    case 'views_exposed_form':
+      if ($form['#id'] == 'views-exposed-form-reports-page-3') {
+        if (isset($form['keys'])) {
+          $form['keys']['#attributes']['placeholder'] = 'Title, topic etc';
+        }
+        if (isset($form['date_filter'])) {
+          // Years in reverse order.
+          $form['#after_build'][] = '_deckfifty_year_select_after';
+        }
+        if (isset($form['tid']['#options'])) {
+          $form['tid']['#options']['All'] = '-Any';
+        }
+      }
+      break;
+  }
+
+}
+
+/**
+ * Reverse date select years
+ */
+function _deckfifty_year_select_after($form, &$form_state) {
+  
+  $options = $form['date_filter']['min']['year']['#options'];
+  $label = array_slice($options, 0, 1, TRUE);
+  $reverse_years = array_reverse(array_slice($options, 1, NULL, TRUE), TRUE);
+  $form['date_filter']['min']['year']['#options'] = $label + $reverse_years;
+  $form['date_filter']['max']['year']['#options'] = $label + $reverse_years;
+    
+  return $form;
+}
+
+/**
+ * Implements hook_views_query_alter().
+ */
+function deckfifty_views_query_alter(&$view, &$query) {
+  
+  // fix https://www.drupal.org/node/1615438 until views is updated
+  if (isset($query->fields['score'])) {
+    unset($query->fields['score']);
+  }
+}

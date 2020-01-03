@@ -1,0 +1,13 @@
+# SiteMinder Class Methods:
+
+siteminder_get_headers
+
+siteminder_get_username
+
+siteminder_get_id
+
+
+
+# Drupal Siteminder Hooks
+
+siteminder_user_delete

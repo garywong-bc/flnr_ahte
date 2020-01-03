@@ -1,0 +1,46 @@
+version: '3.7'
+
+services:
+    db:
+        image: mysql:5.7.22
+        command: --default-authentication-plugin=mysql_native_password
+        volumes:
+            - ./mysql/conf.d/mysql.cnf:/etc/mysql/conf.d/mysql.cnf
+            - ./mysql/data:/var/lib/mysql
+            - ./mysql/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d
+            #        restart: always
+        environment:
+            MYSQL_DATABASE: ${MYSQL_DATABASE}
+            MYSQL_USER: ${MYSQL_USER}
+            MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+            MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+        healthcheck:
+            test: mysqladmin ping -h 127.0.0.1 -u $${MYSQL_USER} --password=$${MYSQL_PASSWORD}
+
+    adminer:
+        image: adminer
+        restart: always
+        ports:
+            - 8080:8080
+        depends_on:
+            - db
+
+    drupal:
+        build: ./drupal
+        ports:
+            - 80:80
+        volumes:
+            - ./app:/var/www/html
+        #    restart: always
+        environment:
+            MYSQL_HOST: db
+            MYSQL_DATABASE: ${MYSQL_DATABASE}
+            MYSQL_USER: ${MYSQL_USER}
+            MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+            MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+            DRUPAL_ADMIN_USER: ${DRUPAL_ADMIN_USER}
+            DRUPAL_ADMIN_PASSWORD: ${DRUPAL_ADMIN_PASSWORD}
+            DRUPAL_ADMIN_EMAIL: ${DRUPAL_ADMIN_EMAIL}  
+            DRUPAL_SITE_NAME: ${DRUPAL_SITE_NAME}  
+        depends_on:
+            - db

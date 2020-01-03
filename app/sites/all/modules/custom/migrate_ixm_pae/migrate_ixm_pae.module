@@ -1,0 +1,148 @@
+<?php
+
+/*
+  26-JUN-2013 GW Set up administrative settings for ePUPS data import
+*/
+define('PAE_SRC',  variable_get('epups_xfer_env',  'prod'));
+
+/**
+ * Implementation of hook_menu().
+ */
+function migrate_ixm_pae_menu() {
+  $items = array(); 
+
+  // Datasource settings form (allows admins to change the environment)
+  $items['admin/config/content/epups_xfer'] = array(
+    'title' => 'ePUPS Datasource',
+    'description' => 'Integration with ePUPS TEST/PROD environments, or local file-on-disk.',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('migrate_ixm_pae_settings'),
+    'access arguments' => array('administer site configuration'),
+  );
+ return $items;
+}
+
+/**
+ * Implementation of hook_settings().
+ */
+function migrate_ixm_pae_settings() {
+
+  // Radio button to indicate ePUPS environment.
+  $form['epups_xfer_env'] = array(
+    '#default_value' => variable_get('epups_xfer_env', PAE_SRC),
+    '#description' => t('Indicates with which ePUPS environment to use.'),
+    '#required' => TRUE,
+    '#title' => t('ePUPS Datasource'),
+    '#type' => 'radios',
+    '#options' => array(
+      'prod'  => t('Production (http://borage.idir.bcgov/doc/ams)'),
+      'test'  => t('Test (http://acorn.idir.bcgov/doc/test2/ams)' ),
+      'local' => t('Local (./sites/default/files/epups)'          ),
+    ),
+  );
+
+  $form['epups_xfer_note'] = array(
+    '#type' => 'markup',
+    '#value' => t('<p>As per specifications, the two file names are <i>noticeofintent.csv</i>
+	and <i>activepermits.csv</i>. Note that settings.php may override this setting via
+	$conf[' . "'epups_xfer_env'] = 'test' / 'prod' / 'local'.</p><br />"),
+    ); 
+
+  $form['epups_xfer_redo_noi'] = array(
+    '#type' => 'markup',
+    '#value' => t('<p>Redoing <em>Noticeofintent</em> Imports: Select <i>Rollback</i> as the
+	Operation and then Import, but with Options -> <i>Update</i> checkbox selected.</p><br />'),
+    ); 
+
+  $form['epups_xfer_redo_activepermits'] = array(
+    '#type' => 'markup',
+    '#value' => t('<p>Redoing <em>ActivePermits</em> Imports: Select <i>Rollback and Import</i> as the Operation and then Import, but with
+    Options -> <i>Update</i> checkbox selected.</p>'),
+    ); 
+
+  return system_settings_form($form);
+}  
+
+/**
+ * Save configuration settings for this module.
+ */
+function migrate_ixm_pae_form_submit($form, &$form_state) {
+  variable_set('epups_xfer_env',
+    $form_state['values']['epups_xfer_env']);
+  drupal_set_message(t('The settings have been saved'));
+}
+
+/** 
+  * Implement hook_uninstall().
+ */
+function migrate_ixm_pae_uninstall() {
+  $variables = array(
+    'epups_xfer_env',
+  );
+  foreach ($variables as $variable) {
+        variable_del($variable);
+  }
+}
+
+function migrate_ixm_pae_api() {
+	dsm('In group function');
+	$api = array(
+		'api' => 2,
+		'groups' => array(
+			'ePUPS' => array(
+				'title' => t('ePUPS'),
+				'default_format' => 'filtered_html',
+			),
+		),
+		'migrations' => array(
+			'ActivePermits' => array(
+				'class_name' => 'ActivePermitsMigration',
+				'group_name' => 'ePUPS',
+			),
+			'NoticeIntent' => array(
+				'class_name' => 'NoticeIntentMigration',
+				'group_name' => 'ePUPS',
+			),
+		),
+	);
+	dsm($api);
+	return $api;
+}
+
+// Register the two ePUPS migration classes
+MigrationBase::registerMigration('ActivePermitsMigration', 'ActivePermits', array('group_name' => 'ePUPS', 'default_uid' => 1));
+MigrationBase::registerMigration('NoticeIntentMigration', 'NoticeOfIntent', array('group_name' => 'ePUPS', 'default_uid' => 1));
+
+/**
+ * Implementation of hook_cron
+ * This is used to run the migrate module
+ */
+/*function migrate_ixm_pae_cron() {
+  $limit = array();
+  $limit['value'] = 5000;
+  $limit['unit'] = "items";
+  @set_time_limit(3000);
+
+  // $migration2 = Migration::getInstance('NoticeIntent');
+  $migration2 = new NoticeIntentMigration();
+  print_r($migration2);
+  $result2 = $migration2->prepareUpdate();
+  $result2 = $migration2->processImport(array('limit' => $limit));
+
+  // Let's load user 1, seems to be need for  deleting content.
+  global $user;
+  $cron_user = $user;
+  $cron_state = drupal_save_session();
+  $user_one = user_load(array('uid' => '1'));
+  drupal_save_session(FALSE);
+  $user = $user_one;
+
+  // $migration = Migration::getInstance('ActivePermits');
+  $migration = new ActivePermitsMigration();
+  $result = $migration->processRollback();
+  $result = $migration->processImport(array('limit' => $limit));
+
+  // Resetting account to be cron anonymous account 
+  $user = $cron_user;
+  drupal_save_session($cron_state);
+}*/

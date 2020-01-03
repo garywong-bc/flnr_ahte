@@ -1,0 +1,170 @@
+/* General Form */
+#main-content form#extended-user-account-form {
+	background:none;
+	border:none;
+	margin-top:20px;
+}
+
+form#extended-user-account-form .column {
+	float:left;
+	width:100%;
+}
+
+form#extended-user-account-form h2 {
+	margin:0 0 2px;
+}
+
+
+/* Account Details */
+#edit-account-details {
+	margin: 0;
+}
+
+#edit-account-details .form-item p {
+	margin-bottom:0;
+}
+
+#edit-account-details .form-item.form-type-item .form-item {
+    background: #eaecf4;
+	border: 1px solid #d7d7d7;
+	-webkit-border-radius: 5px;
+	   -moz-border-radius: 5px;
+	        border-radius: 5px;
+    padding: 20px;
+}
+
+#edit-account-details .form-item label {
+	font-weight:bold;
+	padding-top:0;
+}
+
+#edit-username {
+	margin-top:0;
+}
+
+.terms {
+	height: 250px;
+	width: 100%;
+	overflow: auto;
+	border: 1px solid #DDD;
+    padding: 10px;
+}
+
+/* Email Preferences & Newsletters */
+#edit-email-preferences {
+	padding: 10px 0 0 0;
+	margin: 0;
+}
+
+#email-preferences .form-item.form-type-checkbox {
+	margin:20px 0;
+	padding-left:20px;
+}
+
+#email-preferences .form-item.form-type-checkbox input {
+	margin-left:-20px;
+}
+
+#email-preferences .form-item.form-type-checkbox label.option span {
+	font-weight:bold;
+}
+
+#email-preferences .form-item.form-type-checkbox label.option p {
+	display:inline;
+}
+
+/* General Email Subscriptions */
+#email-preferences .form-item-field-subscribe {
+	border-bottom:1px solid #CCC;
+	padding-bottom:20px;
+}
+
+
+/* Buttons */
+#extended-user-account-form #buttons {
+	clear:both;
+}
+
+#extended-user-account-form #buttons #edit-buttons {
+	margin:0;
+}
+
+#extended-user-account-form #buttons #edit-buttons input[type="submit"] {
+	margin:0 10px 0 0;
+	float: right;
+	font-weight: bold;
+	font-size: 1.0em;
+}
+
+/* Manage Email Form for Modal Window */
+#block-extended-user-account-manage-email-subscriptions {
+	display:none;
+}
+
+.fancybox-inner #extended-user-account-manage-email-subscriptions-form {
+	padding:10px 30px;
+}
+
+.fancybox-inner #extended-user-account-manage-email-subscriptions-form .form-item.form-type-checkbox {
+	margin:20px 0;
+	padding-left:20px;
+}
+
+.fancybox-inner #extended-user-account-manage-email-subscriptions-form .form-item.form-type-checkbox input {
+	margin-left:-20px;
+}
+
+.fancybox-inner #extended-user-account-manage-email-subscriptions-form .form-item.form-type-checkbox label.option span {
+	font-weight:bold;
+}
+
+.fancybox-inner #extended-user-account-manage-email-subscriptions-form .form-item.form-type-checkbox label.option p {
+	display:inline;
+}
+
+.fancybox-inner #extended-user-account-manage-email-subscriptions-form input[type="submit"] {
+	margin:0 10px 0 0;
+	float: right;
+	font-weight: bold;
+	font-size: 1.0em;
+}
+
+/* Manage Email Subscriptions Blocks */
+.block.block-extended-user-account .content {
+	background: #f2f2f2;
+	border: 1px solid #CCC;
+	-webkit-border-radius: 5px;
+	   -moz-border-radius: 5px;
+	        border-radius: 5px;
+    padding: 10px;
+}
+
+.block.block-extended-user-account .content p {
+	margin-bottom:0;
+	margin-top:10px;
+}
+
+.block.block-extended-user-account .content p:first-child {
+	margin-top:0;
+}
+
+.block.block-extended-user-account .content a.button {
+	border:1px solid #CCC;
+	-webkit-border-radius: 5px;
+	   -moz-border-radius: 5px;
+	        border-radius: 5px;
+	padding: 5px;
+	margin: 0;
+	float: right;
+	font-weight:bold;
+}
+
+.block.block-extended-user-account .content a.button:hover {
+	color:#555;
+}
+
+.delete-account {
+	margin-top: 11px;
+    float: right;
+    margin-right: 20px;
+}

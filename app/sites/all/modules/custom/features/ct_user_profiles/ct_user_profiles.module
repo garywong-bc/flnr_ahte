@@ -1,0 +1,3 @@
+<?php
+
+include_once('ct_user_profiles.features.inc');

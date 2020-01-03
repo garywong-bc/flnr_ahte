@@ -1,0 +1,149 @@
+/* General Flyout Menu */
+#flyout-menu {
+	position: absolute;
+	display:none;
+	z-index:1000;
+	top:29px;
+	left:0;
+}
+
+#flyout-menu .content {
+    background: url("../images/menu/menu-bg.png") no-repeat scroll -46px 0 #EFEFEF;
+    box-shadow: 0 10px 30px #333333;
+	height: 266px;
+    overflow: visible;
+    padding: 0;
+    width: 736px;
+}
+
+#flyout-menu .contextual-links-wrapper {
+	display:none;
+}
+
+#government-menu-wrapper #government-menu ul li.active {
+	z-index:1001;
+}
+
+/* Flyout Image */
+#government-menu-wrapper #flyout-menu img {
+	position:absolute;
+	bottom:0;
+}
+
+
+/* Flyout List */
+#government-menu-wrapper #flyout-menu ul {
+    left: 0;
+    list-style-position: outside;
+    padding-left: 220px;
+    padding-top: 15px;
+    position: absolute;
+    top: 40px;
+    width: 289px;
+}
+
+#government-menu-wrapper #flyout-menu ul li {
+	background:none;
+	cursor: pointer;
+    list-style: none outside none;
+    padding: 4px 0 4px 17px;
+	float:none;
+}
+
+#government-menu-wrapper #government-menu #flyout-menu ul li:hover {
+	background:#7E8A9D;
+}
+
+#government-menu-wrapper #government-menu #flyout-menu ul li a {
+	text-transform:none;
+	background:none !important;
+	color: #394559;
+    display: block;
+    font-family: 'verdana',sans-serif;
+    font-size: 1em;
+    line-height: 1em;
+    margin: 0;
+    padding:1px 0 2px 0;
+    text-decoration: none;
+    width: auto;
+}
+
+#government-menu-wrapper #government-menu #flyout-menu ul li a:hover,
+#government-menu-wrapper #government-menu #flyout-menu ul li:hover a {
+	color:#EFEFEF !important;
+}
+
+/* First List Item - Menu Title */
+#government-menu-wrapper #government-menu #flyout-menu .content ul li.first {
+	position:absolute;
+	top:-35px;
+}
+
+#government-menu-wrapper #government-menu #flyout-menu .content ul li.first a {
+	color: #234175;
+    font-family: 'Century Gothic',sans-serif !important;
+    font-size: 24px;
+    font-weight: normal;
+}
+
+#government-menu-wrapper #government-menu #flyout-menu ul li.first:hover {
+	background:none !important;
+}
+
+#government-menu-wrapper #government-menu #flyout-menu ul li.first a:hover,
+#government-menu-wrapper #government-menu #flyout-menu ul li.first:hover a {
+	color:#394559 !important;
+	cursor:default;
+}
+
+/* Top Destinations */
+#government-menu-wrapper #government-menu #flyout-menu .topDestinations {
+	margin: 0;
+	position: absolute;
+	z-index: 5000;
+	top: 54px;
+	right: 90px;
+}
+
+#government-menu-wrapper #government-menu #flyout-menu .topDestinations ul {
+	margin:0;
+	padding:0;
+	width:190px;
+}
+
+#government-menu-wrapper #government-menu #flyout-menu .topDestinations ul li {
+	margin:0;
+	padding:3px 0;
+	background:none !important;
+	color: #394559 !important;
+}
+
+#government-menu-wrapper #government-menu #flyout-menu .topDestinations ul li:hover {
+	background:none !important;
+	color: #394559 !important;
+	text-decoration:underline;
+}
+
+#government-menu-wrapper #government-menu #flyout-menu .topDestinations ul li a {
+	font-size:11px;
+	background:none !important;
+	display:block;
+	color: #394559 !important;
+}
+
+#government-menu-wrapper #government-menu #flyout-menu .topDestinations ul li a:hover {
+	background:none !important;
+	color: #394559 !important;
+	text-decoration:underline;
+}
+
+div.flyout {
+	box-shadow: 0 5px 15px #333;
+	/* Has to be here to render PIE properly in IE */
+    behavior: url('/sites/all/themes/moh/csspie/PIE.htc');	
+}
+
+/* Footer Top Destinations Menu */
+#footer div.footer-links div[id^='block-menu-menu-bcgov-td']  {
+	display:none;
+}

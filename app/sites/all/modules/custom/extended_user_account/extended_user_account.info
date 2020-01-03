@@ -1,0 +1,6 @@
+name = "Extended User Account"
+description = "Adds custom user account management page."
+core = "7.x"
+package = "Siteminder Authentication"
+dependencies[] = siteminder
+stylesheets[all][] = css/manage-account.css

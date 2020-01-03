@@ -1,0 +1,164 @@
+.container-16 {
+	margin:0px 0px;
+}
+
+h2 {
+	color:#394559;
+	text-decoration:none;
+	font-size:2.083em;
+	
+}
+
+img {
+	float:left;	
+	border: 0;
+	margin:0;
+}
+
+span {
+
+	margin: 0px 0px;
+	font-size:0.846em;
+	font-weight:bold;
+	font-family: Verdana, Geneva, sans-serif;
+}
+
+a.print-page-button {
+	float:right;
+	margin-top:15px;
+}
+
+a.print-page-button img {
+	margin-right:5px;
+}
+
+/* LISTS */
+ul {
+    margin: 10px 0 10px 15px;
+}
+
+ul li {
+    list-style: none outside url("../images/yellow-bullet.png");
+}
+
+/* TABLES */
+.node table {
+    border: 1px solid #D9D9D9;
+    border-spacing: 0;
+    color: #646464;
+    font-family: Verdana,Geneva,sans-serif;
+    font-size: 1em;
+    margin: 10px 0;
+    table-layout: fixed;
+}
+
+.node tbody {
+    border-top: 1px solid #CCCCCC;
+}
+
+
+.node table td {
+    border: 1px solid #D9D9D9;
+    padding: 5px;
+}
+
+.node caption, th, td {
+    font-weight: normal;
+    text-align: left;
+}
+
+/* SIDEBAR BLOCKS */
+#sidebar-right h2 {
+	font-size: 1.2307em;
+}
+
+.print_html a, 
+.print_mail a {
+	color: #999 !important;
+}
+
+.share a:hover,
+.print_html a:hover,
+.print_mail a:hover {
+	color: #666 !important;
+}
+
+
+/*Print Form */
+form#print-mail-form {
+
+	margin: 10px 0px;
+	background: none repeat scroll 0 0 #EBEBEB;
+	border:1px solid #d9d9d9;
+	
+	-moz-border-radius: 5px;
+	-webkit-border-radius: 5px;
+	border-radius: 5px; /* future proofing */
+	-khtml-border-radius: 5px; /* for old Konqueror browsers */
+	
+	behavior: url('/sites/all/themes/moh/csspie/PIE.htc');	
+
+}
+
+form#print-mail-form div{
+	clear:both;
+}
+
+
+form#print-mail-form input, 
+form#print-mail-form textarea,
+form#print-mail-form .description {
+	margin:0px 20px 5px;
+	
+}
+
+
+form#print-mail-form label,
+form#print-mail-form input,
+form#print-mail-form .description {
+	font-family: Verdana, Geneva, sans-serif;
+	font-size:1em;
+	color:#646464;
+	font-weight: normal;
+
+}
+form#print-mail-form label {
+	float:left;
+	margin:10px 20px 5px;
+}
+
+form#print-mail-form .description {
+	font-size:0.846em;
+	float:left;
+	font-weight:bold;
+
+}
+
+
+form#print-mail-form input.form-text,
+form#print-mail-form textarea {
+	float:left;
+	width: 92%;
+	color:#000;
+	border:1px solid #d9d9d9;
+
+}
+
+form#print-mail-form input.form-submit{
+	width: auto;
+	padding: 5px;
+	color: white;
+	background: #535D6E;
+	cursor: pointer;
+	margin: 10px 0 0 5px;
+	float: right;
+}
+
+form#print-mail-form a {
+	float:left;
+	margin:10px 20px 5px;
+}
+
+form#print-mail-form input:disabled {
+		background: none repeat scroll 0 0 #ddd;
+}

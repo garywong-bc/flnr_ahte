@@ -1,0 +1,45 @@
+#page{
+	margin:0px 0px;
+	padding:0px 0px;	
+}
+
+#site-header, #footer { 
+	background-color:#394559;		
+}
+
+#footer { 
+	/*ie 7 hack - clears space at bottom*/
+	*display:inline-block; 	
+	margin: 0px 0px;
+	padding:20px 0px;	
+}
+
+#branding {
+	padding:20px 0px;
+}
+
+#breadcrumb-share {
+	margin:0 auto;
+}
+
+#main-nav, #main-nav-footer { 
+	background: none repeat scroll 0 0 #535d6e;
+	height:46px;
+}
+
+#second-nav {
+	height:24px;
+	background: none repeat scroll 0 0 #e1e3e6;
+}
+
+#content {
+	margin:0 auto 20px auto;
+}
+
+.front #content {
+	margin-top: 20px;
+}
+
+.no-breadcrumbs {
+	margin-bottom: 10px !important;
+}

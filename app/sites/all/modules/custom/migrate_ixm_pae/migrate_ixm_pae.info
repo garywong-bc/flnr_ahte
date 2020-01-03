@@ -1,0 +1,18 @@
+name = "Migrate CSV from E-PUPs"
+description = "Module to import CSV files from E-PUP - 'Active Permits' and 'Notice of Intent'"
+package = "IXM Modules"
+core = 7.x
+; Information manually added on 2013-06-25
+version = "7.x-1.0"
+project = "migrate_ixm_pae"
+datestamp = "1218127523"
+
+dependencies[] = migrate
+dependencies[] = migrate_extras
+dependencies[] = autoload
+# dependencies[] = dbtng
+
+#  include the files that contain your Migrate classes
+files[] = migrate_ixm_pae.module
+files[] = activepermits.inc
+files[] = notice_intent.inc

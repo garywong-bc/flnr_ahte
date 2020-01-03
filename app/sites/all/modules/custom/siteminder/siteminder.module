@@ -1,0 +1,117 @@
+<?php
+
+/**
+ * Implements hook_menu().
+ */
+function siteminder_menu() {
+
+	$items = array();
+  
+	$items['admin/config/people/siteminder'] = array(
+		'file' => 'siteminder.admin.inc',
+		'title' => 'Siteminder',
+		'description' => 'Configure Drupal to log in users automatically using SiteMinder header information.',
+		'page callback' => 'drupal_get_form',
+		'page arguments' => array('siteminder_admin_settings'),
+		'access arguments' => array('administer siteminder settings'),
+		'type' => MENU_NORMAL_ITEM,
+	);
+
+	return $items;
+}
+
+
+/**
+ * Hook into the user delete method.
+ * Delete siteminder record for user
+ * if the user account is deleted
+ */
+function siteminder_user_delete($account) {
+	db_delete('siteminder')->condition('uid', $account->uid)->execute();
+}
+
+
+/**
+ * Add module specific permission 
+ */
+function siteminder_permission() {
+	return array(
+		'administer siteminder settings' => array(
+			'title' => t('Administer the siteminder global settings'),
+			'description' => t('Perform administration tasks for siteminder.'),
+		),
+	);
+}
+
+/**
+ * Implements hook_menu_site_status_alter().
+ * 
+ * If the URL matches, redirect to account page
+ * 
+ */
+function siteminder_menu_site_status_alter(&$menu_site_status, $path) {
+	$query_parameters = drupal_get_query_parameters();
+	$redirect = !empty($query_parameters['login']) ? FALSE : TRUE;
+	$paths = array ('user', 'user/login', 'user/password');
+	if (in_array($path, $paths) && $redirect) {
+		drupal_goto('account');
+	}	
+}
+
+
+/**
+ * Implements hook_page_build(&$page)
+ * 
+ * Runs the following on every page load:
+ * - Check the session duration and logout if required
+ * - Check the accpeted terms and redirect if required
+ */
+function siteminder_page_build(&$page) {
+
+	global $user;
+
+	// SM Session are configured with default timeouts of 4 hours maximum and 1 hour idle
+	define("MAX_SESSION_DURATION", 14400);
+	define("IDLE_SESSION_DURATION", 3600);
+	
+	if ( $user->uid > 0 ) {
+		
+		// Redirect use to account if they haven't accepted the terms
+		$account = user_load($user->uid);	
+		$accepted_terms = $account->field_accept_terms && $account->field_accept_terms['und'] ? $account->field_accept_terms['und'][0]['value'] : FALSE;
+		
+		if (!$accepted_terms && current_path() != 'account') {
+			$_SESSION['registration_incomplete'] = TRUE;
+			drupal_goto('account');
+		}	
+		
+		// Log out users when session has expired
+		$isSessionGreaterThanMaxDuraiton = ( REQUEST_TIME - MAX_SESSION_DURATION ) > $user->login;
+		$isSessionStale = ( REQUEST_TIME - IDLE_SESSION_DURATION ) > $user->timestamp;
+		if ( $isSessionStale || $isSessionGreaterThanMaxDuraiton ) {
+			module_load_include('pages.inc', 'user');
+			user_logout_current_user();
+		}
+
+	}
+
+}
+
+
+/**
+ * Implements hook_user_logout
+ * Redirect users to the SiteMinder logout endpoint to ensure their
+ * SM session is destroyed as well.  
+ */
+function siteminder_user_logout( $account ){
+	$logoutURL 	= variable_get('siteminder_logout_url', NULL);
+	$redirect 	= $_SERVER["HTTP_REFERER"];
+	if( preg_match( "/account$/", $redirect ) ){
+		$redirect = str_replace( "/account", "/", $redirect );
+	}
+	$logoutPath = url($logoutURL, array( 'query' => array('returl' => $redirect, 'retnow' => 1) ));	
+	session_destroy();	
+	if ( $logoutURL ){
+		drupal_goto( $logoutPath );
+	}
+}

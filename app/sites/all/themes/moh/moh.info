@@ -1,0 +1,53 @@
+; $Id: moh.info
+
+name = Province of BC Drupal Theme
+description = A custom Drupal 7 theme based off the 960 Grid System.
+screenshot = images/screenshot.png
+core = 7.x
+engine = phptemplate
+
+; Stylesheets. Anything within the "framework" folder will be placed before all others.
+stylesheets[all][] = css/framework/reset.css
+stylesheets[all][] = css/framework/960.css
+
+; Theme specific styles. Any sub-themes should override this.
+stylesheets[all][] = css/html-elements.css
+stylesheets[all][] = css/navigation.css
+stylesheets[all][] = css/page.css
+stylesheets[all][] = css/node.css
+stylesheets[all][] = css/blocks.css
+stylesheets[print][] = css/print.css
+
+; Theme specific javascript
+scripts[] = js/jquery.jfontsizer.js
+scripts[] = js/slides.jquery.js
+scripts[] = js/jquery.gov.2.1.js
+scripts[] = js/fivestar-modified.js
+scripts[] = js/menu-dropdown.js
+scripts[] = js/rate-comment.js
+
+; Regions
+regions[page_top]       			= Page top
+regions[header]         			= Header
+regions[search_box]     			= Search Box
+regions[highlighted]    			= Highlight
+regions[help]           			= Help
+regions[content]        			= Content
+regions[lower_content]				= Lower Content
+regions[sidebar_first]  			= Left sidebar
+regions[sidebar_second] 			= Right sidebar
+regions[print_share_email] 			= Print Share Email
+regions[footer]         			= Footer
+regions[footer_menu_one_level1]		= Footer Menu One Level 1
+regions[footer_menu_two_level1]    	= Footer Meuu Two Level 1
+regions[footer_menu_three_level1]  	= Footer Menu Three Level 1
+regions[footer_menu_four_level1]   	= Footer Menu Four Level 1
+regions[footer_menu_one_level2]		= Footer Menu One Level 2
+regions[footer_menu_two_level2]    	= Footer Menu Two Level 2
+regions[footer_menu_three_level2]  	= Footer Menu Three Level 2
+regions[footer_menu_four_level2]   	= Footer Menu Four Level 2
+regions[footer_media_links]   		= Footer Media Links
+regions[page_bottom]    			= Page bottom
+
+; Theme Specific Settings
+settings[gov_menu] = 1

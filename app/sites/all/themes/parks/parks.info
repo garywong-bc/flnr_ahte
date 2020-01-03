@@ -1,0 +1,26 @@
+; $Id: moh.info
+
+name = BC Government Parks 
+description = A custom Drupal 7 theme.
+screenshot = images/screenshot.png
+core = 7.x
+engine = phptemplate
+
+; Stylesheets.
+stylesheets[all][] = css/global.css
+
+; Theme specific javascript
+scripts[] = js/global.js
+;scripts[] = js/menu.js
+scripts[] = js/misc.js
+
+; Regions
+regions[header_row_1]         		= Header Row 1
+regions[header_row_2]         		= Header Row 2
+regions[navigation]     			= Top Navigation Bar
+regions[breadcrumb]					= Breadcrumb
+regions[content]        			= Content
+regions[left_sidebar]  				= Left sidebar
+regions[right_sidebar] 				= Right sidebar
+regions[social_media]				= Social Media
+regions[footer_links]				= Footer Links

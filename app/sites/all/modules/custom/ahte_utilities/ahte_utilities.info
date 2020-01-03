@@ -1,0 +1,4 @@
+name = "AHTE Utilities"
+description = "Adds custom functionality for AHTE."
+core = "7.x"
+package = "AHTE Utilities"

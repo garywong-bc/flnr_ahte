@@ -1,0 +1,99 @@
+<?php
+/**
+ * @file
+ * Install, update and uninstall functions for the siteminder module.
+ *
+ */
+
+
+
+/**
+ * Implements hook_install().
+ */
+function siteminder_install() {
+
+}
+
+/**
+ * Implements hook_uninstall().
+ */
+function siteminder_uninstall() {
+	// Remove all siteminder_* variables
+	$result = db_select('variable', 'v')
+		->fields('v', array('name'))
+		->condition('name', 'siteminder_%', 'LIKE')
+		->execute();
+	
+	while ($var = $result->fetchField()) {
+		variable_del($var);
+	}
+}
+
+/**
+ * Implements hook_schema().
+ */
+function siteminder_schema() {
+  $schema['siteminder'] = array(
+    'description' => 'User and siteminder id mapping',
+    'fields' => array(
+      'sid' => array(
+        'description' => 'The siteminder id for a given user',
+        'type' => 'varchar',
+        'length' => 32,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'uid' => array(
+        'description' => 'The {users}.uid that belongs to this siteminder id',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+    ),
+    'primary key' => array('sid'),
+    'unique keys' => array(
+      'sid_uid' => array('sid', 'uid'),
+    ),
+  );
+  $schema['siteminder_map'] = array(
+    'description' => 'Siteminder key mappings',
+    'export' => array(
+      'key' => 'mid',
+      'identifier' => 'mapping',
+      // 'default hook' => 'default_siteminder', // Function hook name.
+      'api' => array(
+        'owner' => 'siteminder',
+        'api' => 'siteminder_default', // Base name for api include files.
+        'minimum_version' => 1,
+        'current_version' => 1,
+      ),
+    ),
+    'fields' => array(
+      'mid' => array(
+        'type' => 'varchar',
+        'length' => '32',
+        'not null' => TRUE,
+        'description' => 'Machine-readable name of the Siteminder mapping.',
+      ),
+      'name' => array(
+        'type' => 'varchar',
+        'length' => '32',
+        'default' => '',
+        'not null' => TRUE,
+        'description' => 'Name of the siteminder mapping.',
+      ),
+      'map' => array(
+        'type' => 'text',
+        'size' => 'big',
+        'not null' => FALSE,
+        'serialize' => TRUE,
+        'description' => 'A serialized array of a Siteminder mapping.',
+      ),
+    ),
+    'primary key' => array('mid'),
+    'unique keys' => array('name' => array('name')),
+  );
+
+  return $schema;
+}
+

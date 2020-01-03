@@ -1,0 +1,5 @@
+name = "Siteminder"
+description = "Siteminder authentication system"
+package = "Siteminder Authentication"
+core = 7.x
+files[] = includes/Siteminder.inc

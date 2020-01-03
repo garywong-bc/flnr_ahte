@@ -1,0 +1,58 @@
+/* Revisions Page - Remove Buttons */
+.page-node-revisions-view .tabs.secondary {
+	display:none;
+}
+
+/* Embedded nodes */
+.node-embed {
+	border:1px solid #D6D6D6;
+	margin-bottom:4px;
+	margin-top:4px;
+}
+
+.node-embed .field-name-field-pdf-file,
+.node-embed .field-name-field-document {
+	background:#EFEFEF;
+	border-bottom: 1px solid #CCCCCC;
+	padding-top: 0.01em;
+}
+
+.node-embed .field-name-body img {
+	margin: 10px;
+}
+
+.node-embed .field-name-field-audio-file {
+	margin: 10px;
+}
+
+.node-embed .field-name-body {
+	text-align: center;
+	font-size: 0.9em;
+	color: #888;
+	margin: 10px;
+}
+
+/* PDF File & Document Icons */
+.node-embed .field-name-field-pdf-file img,
+.node-embed .field-name-field-document img {
+	margin:0 5px 0 0;
+	border:none;
+	padding:0;
+}
+
+/* Multiple PDF Files or Documents */
+.node-embed .field-name-field-pdf-file .field-item,
+.node-embed .field-name-field-document  .field-item {
+	margin:10px;
+}
+
+span.pdf-size {
+	font-size: 0.75em;
+	position: relative;
+	top: -3px;
+}
+
+/* Node fields */
+.node .field {
+	margin: 15px 0;
+}

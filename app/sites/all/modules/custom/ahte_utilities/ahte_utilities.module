@@ -1,0 +1,35 @@
+<?php 
+
+    function ahte_utilities_menu() {
+
+        $items = array();
+
+        $items['has-user-voted/%/%'] = array(
+            'page callback' => 'ahte_utilities_has_user_voted',
+            'page arguments' => array(1,2),
+            'access callback' => TRUE,
+        );
+        return $items;
+
+    }
+
+    function ahte_utilities_has_user_voted($nid, $vote) {
+
+        global $user;
+
+        $user_has_voted = db_query("SELECT vote_id FROM {votingapi_vote} WHERE entity_id = :nid AND uid = :uid", array(':nid' => $nid, ':uid' => $user->uid))->fetchField();
+
+        if ( empty($user_has_voted) ) {
+            echo 'FALSE';
+        }
+        else {
+            echo 'TRUE';
+            db_update('votingapi_vote')
+                ->fields(array(
+                  'value' => (float) $vote,
+                ))
+                ->condition('vote_id', $user_has_voted, '=')
+                ->execute();
+        }
+        //echo empty($user_has_voted) ? 'FALSE' : 'TRUE';
+    }

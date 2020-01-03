@@ -1,0 +1,90 @@
+/* Governemnt Menu Wrapper */
+#government-menu-wrapper {
+	background:#293649;
+}
+
+/* Government Menu */
+#government-menu {
+	position:relative;
+	z-index:500;
+}
+
+/* Government Menu UL */
+#government-menu-wrapper #government-menu ul {
+	margin:0;
+	padding:0;
+}
+
+/* Governemnt Menu LI */
+#government-menu-wrapper #government-menu li {
+	list-style:none;
+	margin:0;
+	padding:0;
+	position:relative;
+	float:left;
+	
+}
+
+/* Governemnt Menu LINKS */
+#government-menu-wrapper #government-menu li a {
+	font-size:11px;
+	text-transform:uppercase;
+    padding: 8px 5px;
+    color: white;
+    text-decoration: none;
+	display:inline-block;
+	
+	
+}
+
+#government-menu-wrapper #government-menu li a.active {
+	color: #E9BF5D;
+}
+
+#government-menu-wrapper #government-menu li:hover a,
+#government-menu-wrapper #government-menu li a:focus,
+#government-menu-wrapper #government-menu li.active a {
+    background-color: #E7EAF1;
+    color: #384556 !important;
+    text-decoration: underline;
+}
+
+/* Click Trigger */
+#government-menu-wrapper #government-menu li .clickTrigger {
+    background: url("../images/flyoutArrow_spriteMap.png") no-repeat 0 0;
+    cursor: pointer;
+    float: right;
+    height: 15px;
+    padding: 7px 4px;
+    width: 13px;
+	
+	/*ie7 fixes*/
+	/*.height:14px;*/	
+	.float:none;
+	.display:inline-block;*/
+}
+
+#government-menu-wrapper #government-menu li:hover .clickTrigger,
+#government-menu-wrapper #government-menu li a:focus + .clickTrigger,
+#government-menu-wrapper #government-menu li.active .clickTrigger {
+    background-color: #D3DBE8;
+    background-position: 4px -41px;
+}
+
+#government-menu-wrapper #government-menu li .clickTrigger:hover {
+    background-color: #B7BCC2;
+    background-position: 4px -76px;
+}
+
+#government-menu-wrapper #government-menu li:hover a,
+#government-menu-wrapper #government-menu li a:focus, 
+#government-menu-wrapper #government-menu li.active a {
+    background-color: #E7EAF1;
+    color: #384556 !important;
+    text-decoration: underline;
+}
+
+/* Transform the image */
+#government-menu-wrapper #government-menu li.active .clickTrigger {
+	transform:rotate(180deg);
+} 

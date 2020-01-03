@@ -1,0 +1,3 @@
+<?php
+
+include_once('ct_angling_regulation.features.inc');

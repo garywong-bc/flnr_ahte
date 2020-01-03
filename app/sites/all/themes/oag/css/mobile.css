@@ -1,0 +1,162 @@
+/* Media Queries*/
+
+@media only screen and (max-width: 1280px) {
+  
+  #header .inside,
+  #navigation .inside,
+  #preface .region,
+  #container,
+  #postscript .region,
+  #footer .inside,
+  #closure .inside {
+    width: 980px;
+  }
+  
+  #page img {
+    max-width: 100%;
+    height: auto !important;
+  }  
+  
+  /*twitter*/
+  #tertiary #block-block-11 iframe {
+    height: 125px;
+  }
+  
+}
+
+@media only screen and (max-width: 1000px) {
+  
+  #header .inside,
+  #navigation .inside,
+  #preface .region,
+  #container,
+  #postscript .region,
+  #footer .inside,
+  #closure .inside {
+    width: 96%;
+  }
+  
+  #primary,
+  #secondary,
+  #secondary .region,
+  #tertiary,
+  #tertiary .region {
+    width: 100% !important;
+    margin: 0 !important;
+  }
+  .front #page #primary .inside {
+    padding-top: 0;
+    padding-left: 0;
+    padding-right: 0;
+  }
+  
+  /*header*/
+  #header #logo {
+    margin: 0;
+    max-width: 50%;
+  }
+  
+  /*navigation*/
+  #nav-toggle {
+    display: block;
+  }
+  #navigation {
+    display: none;
+    margin: 0 0 25px 0;
+  }
+  #navigation.active {
+    display: block;
+  }
+  #navigation .inside {
+    padding: 20px 0;
+  }
+  
+  #main-menu li {
+    float: none;
+    display: block;
+    border: 0 none;
+  }
+
+  #page #block-search-form {
+    position: static;
+    clear: both;
+  }
+  #secondary-menu,
+  #block-block-6 {
+    display: none;
+  }
+  
+  /*spotlight*/
+  #primary #block-views-reports-block-1 .flexslider {
+    overflow: hidden;
+    border: 2px solid #fff;
+  }
+  #primary #block-views-reports-block-1 .views-field-overlay {
+    position: static;
+    clear: left;
+  }
+  #primary #block-views-reports-block-1 .views-field-overlay .field-content {
+    padding: 10px;
+  }
+  
+  /*auditor general*/
+  #block-views-employees-block-2 .views-row {
+    width: 100%;
+  }
+
+  
+}
+
+@media only screen and (max-width: 640px) {
+  
+  /*cta*/
+  #block-views-cta-block .views-row .views-field-image {
+    border: 2px solid #fff;
+  }
+  
+  /*auditor general*/
+  #block-views-employees-block-2 .views-row {
+    text-align: center;
+  }
+  #block-views-employees-block-2 .views-field-image {
+    float: none;
+  }
+  #block-views-employees-block-2 .views-field-image img {
+    display: inline-block;
+  }
+  
+  /*staff directory*/
+  #primary .view-employees .views-field-image {
+    float: none;
+    margin: 0 0 20px 0;
+    max-width: 200px;
+  }
+  #primary .view-employees .views-field-title,
+  #primary .view-employees .views-field-subtitle,
+  #primary .view-employees .views-field-position,
+  #primary .view-employees .views-field-date,
+  #primary .view-employees .views-field-act,
+  #primary .view-employees .views-field-phone,
+  #primary .view-employees .views-field-body,
+  #primary .view-employees .views-field-link {
+    margin-left: 0;
+  }
+  
+  /*footer*/
+  #footer .block {
+    width: 100%;
+    margin: 40px 0 0 0;
+    text-align: center;
+  }
+  #footer .block ul.menu {
+    text-align: center;
+  }
+  #footer ul.menu li {
+    border: 0 none;
+  }
+  #footer ul.menu li a {
+    padding: 0;
+  }
+  
+  
+}
