@@ -72,3 +72,24 @@ WORKDIR /var/www/html
 #	chown -R www-data:www-data sites modules themes
 
 # vim:set ft=dockerfile:
+
+ADD https://raw.githubusercontent.com/eficode/wait-for/master/wait-for wait-for
+
+COPY ./files/default.settings.php ./files/private-htaccess ./files/AHTE-2020-01-03T14-54-15.mysql /tmp/
+
+RUN apt-get update && apt-get install -y \
+	mysql-client \
+	vim \
+    netcat \
+&& php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
+&& php -r "if (hash_file('sha384', 'composer-setup.php') === 'baf1608c33254d00611ac1705c1d9958c817a1a33bce370c0595974b342601bd80b92a3f46067da89e3b06bff421f182') { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); } echo PHP_EOL;" \
+&& php composer-setup.php \
+&& php -r "unlink('composer-setup.php');" \
+&& mv composer.phar /usr/local/bin/composer \
+&& php -r "copy('https://github.com/drush-ops/drush/releases/download/8.3.2/drush.phar', 'drush.phar');" \
+&& chmod +x drush.phar \
+&& mv drush.phar /usr/local/bin/drush \
+&& yes | drush init \
+&& drush @none dl utf8mb4_convert-7.x \
+&& drush cc drush \
+&& chmod +x wait-for && mv wait-for /usr/local/bin/wait-for

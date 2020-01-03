@@ -15,6 +15,8 @@
 
 ## Initial config of AHTE
 
+```bash
+docker-compose exec drupal /bin/bash
 
 sed "s/^\$databases = array();/\$databases = array (\n"\
 "  'default' =>\n"\
@@ -33,12 +35,6 @@ sed "s/^\$databases = array();/\$databases = array (\n"\
 ");/g" \
 /var/www/html/sites/default/default2.settings.php > /var/www/html/sites/default/settings.php
 
-
-
-```bash
-docker-compose exec drupal /bin/bash
-
-
 cat <<\EOF >> /var/www/html/sites/default/settings.php
 $conf['file_temporary_path'] = '/tmp';
 $conf['file_public_path'] = 'sites/default/files';
@@ -55,8 +51,18 @@ mkdir -p /var/www/html/sites/default/files/private && \
 chown -R www-data:www-data /var/www/html/sites/default/files && \
 cp /tmp/private-htaccess /var/www/html/sites/default/files/private/.htaccess
 
-mysql -u${MYSQL_USER} -p${MYSQL_PASSWORD} ${MYSQL_DATABASE} < /tmp/AHTEDelivery-2019-12-31T16-00-17.mysql 
+mysql -u${MYSQL_USER} -p${MYSQL_PASSWORD} ${MYSQL_DATABASE} < /tmp/AHTE-2020-01-03T14-54-15.mysql
 
 
-root@11b2e46a3084:/var/www/html/sites/default/files/private# drush upwd gw_test_bceid --password="gw_test_bceid"
-Changed password for gw_test_bceid    
+root@99846325f264:/var/www/html# drush upwd gw_bceid --password="gw_bceid"
+Changed password for gw_test_bceid
+
+
+apt-get update && apt-get upgrade
+
+
+apt-get install software-properties-common
+
+add-apt-repository ppa:ondrej/apache2 
+add-apt-repository ppa:ondrej/php
+
